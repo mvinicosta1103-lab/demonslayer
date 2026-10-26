@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -91,18 +90,22 @@ public final class BreathManager {
 
 		boolean canBreathe = p.getAirSupply() >= p.getMaxAirSupply(); // debaixo d'água não dá pra respirar
 
+		boolean breathingDeep = d.exhausted <= 0 && canBreathe && d.concentrating && d.interrupted <= 0 && p.isAlive();
+		if (!breathingDeep) d.concentrateTicks = 0;
+
 		if (d.exhausted > 0) {
 			d.exhausted--;
 			if (d.exhausted == 0) d.breath = RECOVERY_BREATH;
 		} else if (canBreathe) {
-			if (d.concentrating && d.interrupted <= 0 && p.isAlive()) {
+			if (breathingDeep) {
 				d.breath += REGEN_CONCENTRATING;
 				p.setSprinting(false);
 				p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 1, false, false, false));
-				if (p.tickCount % 10 == 0) {
-					ServerLevel level = (ServerLevel) p.level();
-					level.sendParticles(ParticleTypes.CLOUD, p.getX(), p.getEyeY() - 0.2, p.getZ(), 3, 0.2, 0.1, 0.2, 0.01);
+				// Uma onda de vento saindo da boca, logo ao apertar R e depois a cada intervalo.
+				if (d.concentrateTicks % BreathEffects.WAVE_INTERVAL_TICKS == 0) {
+					BreathEffects.spawnBreathWave(p);
 				}
+				d.concentrateTicks++;
 			} else if (p.isSprinting()) {
 				// correndo: sem recuperar
 			} else if (p.getDeltaMovement().horizontalDistanceSqr() < 0.0004) {

@@ -4,6 +4,19 @@ plugins {
 }
 
 repositories {
+	// Modrinth Maven: AAA Particles e Architectury API
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -30,6 +43,11 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// AAA Particles (carregador de efeitos Effekseer) + Architectury API (dependência dele).
+	// O Modrinth Maven NÃO traz dependências transitivas, por isso o Architectury é declarado à parte.
+	modImplementation "maven.modrinth:En8uHTOK:${project.aaa_particles_version}"
+	modImplementation "maven.modrinth:lhGA9TYQ:${project.architectury_version}"
 }
 
 processResources {

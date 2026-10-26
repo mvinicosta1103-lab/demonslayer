@@ -29,6 +29,7 @@ public class BreathData {
 	public int cooldown = 0;     // ticks até poder usar outra forma
 	public int exhausted = 0;    // ticks restantes de exaustão
 	public int interrupted = 0;  // ticks sem poder se concentrar (levou dano)
+	public int concentrateTicks = 0; // há quantos ticks está respirando fundo (para pulsar o efeito de vento)
 
 	public BreathData() {}
 
