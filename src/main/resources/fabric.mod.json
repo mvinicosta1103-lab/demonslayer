@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "demonslayer",
+	"version": "${version}",
+	"name": "Demon Slayer",
+	"description": "Mod de Demon Slayer (Kimetsu no Yaiba) para Minecraft.",
+	"authors": [
+		"Seu Nome"
+	],
+	"contact": {},
+	"license": "All-Rights-Reserved",
+	"icon": "assets/demonslayer/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.demonslayer.DemonSlayerMod"
+		],
+		"client": [
+			"com.demonslayer.client.DemonSlayerClient"
+		]
+	},
+	"mixins": [
+		"demonslayer.mixins.json",
+		{
+			"config": "demonslayer.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
