@@ -35,6 +35,24 @@ src/main/resources/
   data/demonslayer/recipe/   # receitas
 ```
 
+## Sistema de respiração
+
+Para usar uma forma você precisa **estar segurando a Katana Nichirin** e ter **fôlego** suficiente.
+
+| Tecla | Ação |
+|-------|------|
+| `R` (segurar) | Respirar fundo: recupera fôlego rápido, mas te deixa lento e sem correr |
+| `G` | Usar a forma selecionada |
+| `V` / `Z` | Próxima / anterior forma |
+| `B` | Trocar de estilo (temporário, até existir o sistema de classes) |
+
+Comandos (op): `/breathing style <water|flame|thunder|wind|stone>` e `/breathing fill`.
+
+Regras do fôlego (0-100): parado recupera 4/s, andando 2/s, correndo 0, segurando `R` 15/s. Levar dano tira fôlego e interrompe a concentração. Debaixo d'água não recupera. Chegar a 0 causa exaustão de 5s (lento + fraco, sem formas).
+Todos os números de balanceamento estão no topo de `BreathManager.java`; custo e recarga de cada forma ficam nos `forms()` de cada arquivo em `breathing/styles/`.
+
+Para criar uma forma nova: adicione um `new BreathingForm(numero, custo, recarga, Classe::metodo)` na lista do estilo, escreva o método usando o `FormUtil` e adicione o nome em `lang/*.json` (`form.demonslayer.<estilo>.<numero>`).
+
 ## Mappings
 
 O projeto usa os **mappings oficiais da Mojang** (`net.minecraft.world.item.Item`, `ResourceLocation`, etc.), não Yarn.
