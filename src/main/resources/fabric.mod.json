@@ -31,7 +31,7 @@
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*",
-		"aaa_particles": "*",
+		"aaa_particles": ">=2.2.0",
 		"architectury": "*"
 	}
 }
