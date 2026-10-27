@@ -4,7 +4,8 @@ plugins {
 }
 
 repositories {
-	// Modrinth Maven: AAA Particles e Architectury API
+	mavenCentral()
+
 	exclusiveContent {
 		forRepository {
 			maven {
@@ -16,12 +17,6 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
-
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
 }
 
 loom {
@@ -36,18 +31,21 @@ loom {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
+	// Fabric API (inclui o Data Attachment API usado em ModAttachments)
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// AAA Particles (carregador de efeitos Effekseer) + Architectury API (dependência dele).
-	// O Modrinth Maven NÃO traz dependências transitivas, por isso o Architectury é declarado à parte.
+	// AAA Particles + dependências (Modrinth Maven não traz transitivas)
 	modImplementation "maven.modrinth:En8uHTOK:${project.aaa_particles_version}"
 	modImplementation "maven.modrinth:lhGA9TYQ:${project.architectury_version}"
+	modImplementation "maven.modrinth:ohNO6lps:${project.forge_config_api_port_version}"
+
+	// NightConfig (exigido pela Forge Config API Port; no dev não vem transitivo)
+	implementation "com.electronwill.night-config:core:3.8.1"
+	implementation "com.electronwill.night-config:toml:3.8.1"
 }
 
 processResources {
@@ -64,9 +62,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
 	sourceCompatibility = JavaVersion.VERSION_21
@@ -78,23 +73,14 @@ jar {
 	inputs.property "projectName", projectName
 
 	from("LICENSE") {
-		rename { "${it}_$projectName"}
+		rename { "${it}_$projectName" }
 	}
 }
 
-// configure the maven publication
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
 			from components.java
 		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }
